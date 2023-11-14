@@ -1,0 +1,24 @@
+---
+- name: set repo on exclude manager
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Delete yum repository files
+      become: true
+      file:
+        path: /etc/yum.repos.d/
+        state: absent
+      notify: Create yum repository directory
+  post_tasks:
+    - name:  copy repo to destination
+      copy:
+        src: Centos8.repo
+        dest: "/etc/yum.repos.d/"
+
+
+  handlers:
+    - name: Create yum repository directory
+      file:
+        path: /etc/yum.repos.d/
+        state: directory
+

@@ -1,0 +1,29 @@
+---
+- name: configure keepalived
+  hosts: mariadb_servers
+  become: true
+  tasks:
+    - name: install keepalived
+      yum:
+        name: keepalived
+        state: present
+
+    - name: copy keepalived.conf.j2 for master
+      template:
+        src: files/keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+      when: inventory_hostname in groups['master']
+
+    - name: copy keealive.conf.slave.j2 for slave
+      template:
+        src: files/keepalived.conf.slave.j2
+        dest: /etc/keepalived/keepalived.conf
+      when: inventory_hostname in groups['backup']
+
+
+    - name: start keepalived
+      service:
+        name: keepalived
+        state: started
+        enabled: yes
+       

@@ -1,0 +1,8 @@
+- name: Get facts
+  hosts: mariadb_servers
+  gather_facts: yes
+
+  tasks:
+    - name: Print IP address
+      debug:
+        var: ansible_default_ipv4.address

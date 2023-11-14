@@ -1,0 +1,16 @@
+[haproxy_server]
+10.163.1.101 
+
+[ansible_manager]
+10.163.1.106 ansible_user=root ansible_password=1
+
+[mariadb_servers] 
+10.163.1.111 ansible_user=root ansible_password=1
+10.163.1.103 ansible_user=root ansible_password=1
+10.163.1.105 ansible_user=root ansible_password=1
+
+[test_node]
+10.163.1.102 ansible_user=root ansible_password=1
+
+[mariadb_client]
+10.163.1.107 ansible_user=root ansible_password=1

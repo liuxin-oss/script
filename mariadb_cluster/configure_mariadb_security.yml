@@ -1,0 +1,32 @@
+---
+- name: Securing MariaDB
+  hosts: mariadb_servers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: install python3-PyMySQL pkg for mysql_db and mysql_user module
+      yum:
+        name: python3-PyMySQL
+        state: present
+    - name: Assign password to MariaDB root user
+      mysql_user:
+        name: root
+        host_all: yes
+        update_password: always
+        password: "{{ root_password }}"
+
+    - name: Authentication credentials copied to root home directory
+      copy:
+        src: files/my.cnf
+        dest: /root/.my.cnf
+
+    - name: Remove anonymous user accounts
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+
+    - name: Remove test database
+      mysql_db:
+        name: test
+        state: absent

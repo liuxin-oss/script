@@ -1,0 +1,11 @@
+---
+- name: Database backup
+  hosts: mariadb_servers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Backup inventory database
+      mysql_db:
+        state: dump
+        name: inventory
+        target: /root/inventory.dump

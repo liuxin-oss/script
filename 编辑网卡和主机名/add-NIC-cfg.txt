@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# 提示用户输入新的主机名
+read -p "请输入新的主机名: " new_hostname
+
+# 更改主机名
+hostnamectl set-hostname $new_hostname && bash
+
+# 提示用户输入要添加的网络接口名称（如eth1、ens34等）
+read -p "请输入要添加的网络接口名称（如eth1、ens34等）: " new_interface
+# 提示用户输入新网卡配置文件的名称
+read -p "请输入新网卡配置文件的名称（如dhcp、static等）:" new_network_name
+
+# 检查网卡配置文件是否存在
+config_file="/etc/sysconfig/network-scripts/ifcfg-$new_interface_name"
+
+if [ -e "$config_file" ]; then
+    echo "网卡配置文件 $config_file 已存在。"
+    exit 1
+fi
+
+# 提示用户输入新的IP地址、子网掩码、网关和DNS地址
+read -p "请输入新的IP地址: " new_ip
+read -p "请输入子网掩码: " new_subnet
+read -p "请输入新的网关: " new_gateway
+read -p "请输入首选DNS地址: " dns1
+
+# 询问用户是否需要备用DNS地址
+read -p "是否需要备用DNS地址？(y/n): " need_dns2
+
+if [[ $need_dns2 == "y" || $need_dns2 == "Y" ]]; then
+    read -p "请输入备用DNS地址: " dns2
+    dns_option="ipv4.dns \"$dns1 $dns2\""
+else
+    dns_option="ipv4.dns $dns1"
+fi
+
+# 使用nmcli创建网卡配置
+nmcli con add con-name $new_network_name ifname $new_interface type ethernet ipv4.addresses $new_ip/$new_subnet ipv4.gateway $new_gateway ipv4.method manual $dns_option
+
+echo "主机名和网卡配置已更新。"
+echo "请执行命令nmcli con up $new_network_name"

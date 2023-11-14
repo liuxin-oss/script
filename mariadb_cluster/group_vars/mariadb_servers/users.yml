@@ -1,0 +1,11 @@
+---
+mysql_users:
+  - name: test1
+    host: localhost
+    priv: '*.*:INSERT,UPDATE,DELETE,SELECT'
+    state: present
+  - name: test2
+    host: '%'
+    priv: '*.*:SELECT'
+    state: present
+

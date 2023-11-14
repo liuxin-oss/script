@@ -1,0 +1,12 @@
+[galera]
+wsrep_on=ON 
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+wsrep_cluster_name=galera_cluster
+wsrep_cluster_address="gcomm://{{ groups['mariadb_servers']|map('extract', hostvars, ['ansible_default_ipv4', 'address'])|join(',') }}"
+wsrep_node_name= {{ inventory_hostname }}    
+wsrep_node_address={{ ansible_default_ipv4.address }}    
+binlog_format=row
+default_storage_engine=InnoDB
+wsrep_slave_threads=1
+wsrep_sst_method=rsync
+

@@ -1,0 +1,28 @@
+---
+- name: haproxy
+  hosts: all
+  become: true
+  tasks:
+    - name: install haproxy
+      yum:
+        name: haproxy
+        state: present
+      when: inventory_hostname in groups['haproxy_server']
+
+- name: copy j2
+  hosts: haproxy
+  gather_facts: no
+  become: true
+  tasks:
+    - name: copy haproxy.cfg.j2
+      template:
+        src: files/haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+      
+    - name: start haproxy and enabled
+      service:
+        name: haproxy
+        state: started
+        enabled: yes
+     
+

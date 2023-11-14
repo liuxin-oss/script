@@ -1,0 +1,18 @@
+global_defs{
+  router_id LVS_DEVEL
+}
+
+vrrp_instance VI_1 {
+  state MASTER
+  interface eth0
+  virtual_router_id 51
+  priority {{ (101 - groups['all'].index(inventory_hostname)) | int }}
+  advert_int 1
+  authentication {
+    auth_type PASS
+    auth_pass 1111
+  }
+  virtual_ipaddress {
+    {{ virtual_ipaddress }} dev eth0
+  }
+}

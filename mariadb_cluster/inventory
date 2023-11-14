@@ -1,0 +1,31 @@
+[haproxy_server]
+haproxy ansible_user=root ansible_password=1 
+
+[ansible_manager]
+manager ansible_user=root ansible_password=1
+
+[mariadb_servers] 
+server1 ansible_user=root ansible_password=1
+server2 ansible_user=root ansible_password=1
+server3 ansible_user=root ansible_password=1
+
+[master]
+server1 ansible_user=root ansible_password=1
+
+[backup]
+server2 ansible_user=root ansible_password=1
+server3 ansible_user=root ansible_password=1
+
+
+[test_nodes]
+test_node ansible_user=root ansible_password=1
+
+[mariadb_client]
+client ansible_user=root ansible_password=1
+
+
+[exclude_manager:children]
+haproxy_server
+mariadb_servers
+test_nodes
+mariadb_client

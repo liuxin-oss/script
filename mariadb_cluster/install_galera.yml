@@ -1,0 +1,30 @@
+---
+- name: galera cluster
+  hosts: mariadb_servers
+  become: true
+  tasks:
+    - name: install galera
+      yum: 
+        name: "galera, mariadb-server-galera"
+        state: present
+
+    - name: copy galera j2
+      template:
+        src: files/galera.cnf.j2 
+        dest: /etc/my.cnf.d/galera.cnf 
+
+    - name: start cluster on server1
+      shell: "galera_new_cluster"
+      when: inventory_hostname == 'server1'
+
+- name: start mariadb
+  hosts: mariadb_servers:!server1
+  become: true
+  tasks:
+    - name: start mariadb and enabled
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+
